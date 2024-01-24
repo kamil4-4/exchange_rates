@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  web:
+    container_name: task_web
+    build: .
+    working_dir: /var/www/html/public
+    depends_on:
+      - db
+    ports:
+      - "8000:80"
+
+  db:
+    image: mysql:8.0
+    container_name: task_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: localhost
+      MYSQL_DATABASE: task
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+
+  phpmyadmin:
+    container_name: task_phpmyadmin
+    image: phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    restart: always
+    ports:
+      - "8080:80"
+
+volumes:
+  database_data:
